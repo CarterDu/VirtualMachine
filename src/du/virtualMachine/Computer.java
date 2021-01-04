@@ -25,9 +25,8 @@ public class Computer {
 	
 	private Bit compareStatusBit1 = new Bit(0);
 	private Bit compareStatusBit2 = new Bit(0);
-	
-	private Bit conditionOfBranch1 = new Bit(0);	//first bit of condition
-	private Bit conditionOfBranch2 = new Bit(0);	//second bit of condition
+
+	Longword statusOfCompare = new Longword();
 	
 	private Longword sp = new Longword();			//stack pointer
 	
@@ -121,20 +120,14 @@ public class Computer {
 			op2.set(registers[(int)op2.getUnsigned()].getSigned());
 		}
 		
-		/**
-		 * branch (0101)
-		 * next 2 bits are conditional bits
-		 */
-		else if(isBranch())
+
+		else if(isBranchGreaterThan() || isBranchGreaterThanOrEqual() || isBranchEqual() || isBranchNotEqual())
 		{
-			conditionOfBranch1.setBit(currentInstruction.bit_container[4].bit);
-			conditionOfBranch2.setBit(currentInstruction.bit_container[5].bit);
-			for(int i = 0; i < 10; i++)
-			{
-				op1.bit_container[i] = currentInstruction.getBit(i + 6);	//value of branching
+			for (int i = 6; i < 16; i++) {
+				op1.bit_container[i] = currentInstruction.getBit(i);
 			}
 		}
-		
+
 		
 		else if(isPush())
 		{
@@ -142,8 +135,6 @@ public class Computer {
 				{
 					op1.set_Bit(i, currentInstruction.getBit(i + 12));
 				}
-				
-			
 		}
 		
 		/**
@@ -266,103 +257,11 @@ public class Computer {
 		
 		else if(isCompare())
 		{
-			Longword statusOfCompare = new Longword();
+
 			statusOfCompare = RippleAdder.substract(op1, op2);
-			
-			/**
-			 * 11 --> op1 > op2
-			 */
-			if(statusOfCompare.getSigned() > 0)
-			{
-				compareStatusBit1 = new Bit(1);
-				compareStatusBit2 = new Bit(1);
-			}
-			/**
-			 * 00 --> op2 > op1
-			 */
-			else if(statusOfCompare.getSigned() < 0)
-			{
-				compareStatusBit1 = new Bit(0);
-				compareStatusBit2 = new Bit(0);		
-			}
-			/**
-			 * 01 --> op1 = op2
-			 */
-			else{
-				compareStatusBit1 = new Bit(1);
-				compareStatusBit2 = new Bit(0);		
-			}
+
 		}
-		
-		/**
-		 * branch(0101)
-		 * set the op2 to value 1
-		 */
-		else if(isBranch())
-		{
-			/**
-			 * branchIfGreaterThan(10)
-			 */
-			if(conditionOfBranch1.getValue()==1 && conditionOfBranch2.getValue()==0)
-			{
-				/**
-				 * When op1 > op2
-				 */
-				if(compareStatusBit1.getValue()==1 && compareStatusBit2.getValue()==1)
-				{
-					op2.set(1);
-				}
-			}
-			
-			/**
-			 * branchIfGreaterThanOrEqual(11)
-			 */
-			else if(conditionOfBranch1.getValue()==1 && conditionOfBranch2.getValue()==1)
-			{
-				/**
-				 * when op1 > op2 or op1 == op2
-				 */
-				if((compareStatusBit1.getValue()==1 && compareStatusBit2.getValue()==1) || 
-						(compareStatusBit1.getValue()==1 && compareStatusBit2.getValue()==0))
-				{
-					op2.set(1);
-					
-				}
-			}
-			
-			/**
-			 * branchIfEqual(01)
-			 */
-			else if(conditionOfBranch1.getValue()==1 && conditionOfBranch2.getValue()==1)
-			{
-				/**
-				 * when op1 > op2 or op1 == op2
-				 */
-				if(compareStatusBit1.getValue()==1 && compareStatusBit2.getValue()==0)
-				{
-					op2.set(1);
-				}
-			}
-			
-			/**
-			 * branchIfNotEqual(01)
-			 */
-			else if(conditionOfBranch1.getValue()==1 && conditionOfBranch2.getValue()==1)
-			{
-				/**
-				 * when op1 > op2 or op1 == op2
-				 */
-				if((compareStatusBit1.getValue()==1 && compareStatusBit2.getValue()==1) || 
-						(compareStatusBit1.getValue()==0 && compareStatusBit2.getValue()==0))
-				{
-					op2.set(1);
-				}
-			}
-			
-			
-		}
-		
-		
+
 		else if(isMove())
 		{
 			result.set(op2.getSigned());
@@ -414,6 +313,8 @@ public class Computer {
 			System.out.println("Make sure your opcode is correct, otherwise check the format!");
 		}
 	}
+
+
 	
 	
 	/**
@@ -431,6 +332,10 @@ public class Computer {
 			
 			else if(isJump())
 			{
+				pc.set(op1.getSigned());
+			}
+
+			else if(isBranchGreaterThan() || isBranchGreaterThanOrEqual() || isBranchEqual() || isBranchNotEqual()){
 				pc.set(op1.getSigned());
 			}
 			
@@ -517,13 +422,37 @@ public class Computer {
 				}
 				registers[indexOfRegister.getSigned()] = result;
 			}
-			
-			
-			else if(isBranch())
+
+			else if(isCompare())
 			{
-				changeProgramCounterWhenBranch();
+				/**
+				 * 10 --> op1 > op2
+				 */
+				if(statusOfCompare.getSigned() > 0)
+				{
+					compareStatusBit1 = new Bit(1);
+					compareStatusBit2 = new Bit(0);
+				}
+
+				/**
+				 * 00 --> op2 > op1
+				 */
+				else if(statusOfCompare.getSigned() < 0)
+				{
+					compareStatusBit1 = new Bit(0);
+					compareStatusBit2 = new Bit(0);
+				}
+
+
+
+				/**
+				 * 11 or 01 --> op1 = op2
+				 */
+				else{
+
+					compareStatusBit2 = new Bit(1);
+				}
 			}
-			
 			
 			else
 			{
@@ -596,24 +525,69 @@ public class Computer {
 		 return false;
 	}
 	
+
+
 	/**
-	 * Determine the method is branch(0101) or not
+	 * Determine the method is branchGreaterThan or not
 	 * @return
 	 */
-	public boolean isBranch(){
-		if(opcode[0].getValue()==0 && opcode[1].getValue()==1 &&  opcode[2].getValue()==0 && opcode[3].getValue()==1)
-		{
-			 return true;
+	public boolean isBranchGreaterThan(){
+		if(opcode[0].getValue()==0 && opcode[1].getValue()==1 && opcode[2].getValue()==0 && opcode[3].getValue()==1){
+			if(compareStatusBit1.getValue()==1 && compareStatusBit2.getValue()==0){
+				return true;
+			}
 		}
-		 return false;
+
+		return false;
 	}
+
+	/**
+	 * Determine the method is branchGreaterThanOrEqual or not
+	 * @return
+	 */
+	public boolean isBranchGreaterThanOrEqual(){
+		if(opcode[0].getValue()==0 && opcode[1].getValue()==1 && opcode[2].getValue()==0 && opcode[3].getValue()==1){
+			if(((compareStatusBit1.getValue()==1 && compareStatusBit2.getValue()==0) || compareStatusBit2.getValue()==1)){
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+	/**
+	 * Determine the method is branchEqual or not
+	 * @return
+	 */
+	public boolean isBranchEqual(){
+		if(opcode[0].getValue()==0 && opcode[1].getValue()==1 && opcode[2].getValue()==0 && opcode[3].getValue()==1){
+			if(compareStatusBit2.getValue() == 1){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Determine the method is branchNotEqual or not
+	 * @return
+	 */
+	public boolean isBranchNotEqual(){
+		if(opcode[0].getValue()==0 && opcode[1].getValue()==1 && opcode[2].getValue()==0 && opcode[3].getValue()==1){
+			if(compareStatusBit2.getValue() == 0){
+				return true;
+			}
+		}
+		return false;
+	}
+
 	
 	/**
 	 * Determine the method is compare(0100) or not
 	 * @return
 	 */
 	public boolean isCompare(){
-		if(opcode[0].getValue()==0 && opcode[1].getValue()==1 &&  opcode[2].getValue()==0 && opcode[3].getValue()==0)
+		if(opcode[0].getValue()==0 && opcode[1].getValue()==1 && opcode[2].getValue()==0 && opcode[3].getValue()==0)
 		{
 			 return true;
 		}
@@ -742,28 +716,7 @@ public class Computer {
 		}
 		 return false;
 	}
-	
 
-	
-	
-	
-	/**
-	 * branch condition if op2's value is 1
-	 */
-	public void changeProgramCounterWhenBranch()
-	{
-		
-		if(op2.getSigned() == 1)
-		{
-			pc.set(pc.getSigned() + op1.getSigned());
-		}
-		else
-		{
-			System.out.println("op2's value is not 1 so NO BRANCH!");
-		}
-	}
-	
-	
 	public void assignValueToRegisterWhen3R()
 	{
 		Longword indexOfRegister = new Longword();	//The index of register to store the result

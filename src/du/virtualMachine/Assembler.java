@@ -91,6 +91,11 @@ public class Assembler {
 					
 					result[i] = "0011".concat(addZeroAfterValueWhenJump(ins[1]));
 				}
+
+				else if(ins[0].equals("compare")){
+					result[i] = "01000000".concat(registerNameToBinary(ins[1])).concat(registerNameToBinary(ins[2]));
+				}
+
 				else if(ins[0].equals("branchIfGreaterThan")) 
 				{
 					
@@ -220,13 +225,38 @@ public class Assembler {
 			str = new StringBuilder(Integer.toBinaryString(Integer.parseInt(str))).reverse() + "0000";
 			return str;
 		}
+
+		else if(length == 5)
+		{
+			str = new StringBuilder(Integer.toBinaryString(Integer.parseInt(str))).reverse() + "000";
+			return str;
+		}
+
+		else if(length == 6)
+		{
+			str = new StringBuilder(Integer.toBinaryString(Integer.parseInt(str))).reverse() + "00";
+			return str;
+		}
+
+		else if(length == 7)
+		{
+			str = new StringBuilder(Integer.toBinaryString(Integer.parseInt(str))).reverse() + "0";
+			return str;
+		}
+
+		else if(length == 9)
+		{
+			str = new StringBuilder(Integer.toBinaryString(Integer.parseInt(str))).reverse() + "";
+			return str;
+		}
+
 		else if(Integer.parseInt(str) < 0)	//when the number is negative
 		{
 			str = new StringBuilder(Integer.toBinaryString(Integer.parseInt(str))).reverse().substring(0, 8);
 			return str;
 		}
 		else{
-			System.out.println("Check your value format! It must be an integer!");
+			System.out.println("Check your value format! It must be an integer! And The length of the integer should be in 0 to 8!");
 		}
 		return null;
 		

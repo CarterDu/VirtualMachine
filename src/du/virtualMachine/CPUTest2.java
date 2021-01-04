@@ -5,7 +5,7 @@ package du.virtualMachine;
  * @author Carter Du
  *
  */
-public class CPUTest2 {
+public class  CPUTest2 {
 	
 	public void runTest() throws Exception
 	{
