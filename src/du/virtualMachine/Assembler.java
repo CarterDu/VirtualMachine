@@ -98,12 +98,10 @@ public class Assembler {
 
 				else if(ins[0].equals("branchIfGreaterThan")) 
 				{
-					
 					result[i] = "010110".concat(addZeroAfterValueWhenBranch(ins[1]));
 				}
 				else if(ins[0].equals("branchIfGreaterThanOrEqual")) 
 				{
-					
 					result[i] = "010111".concat(addZeroAfterValueWhenBranch(ins[1]));
 				}
 				else if(ins[0].equals("branchIfEqual")) 
@@ -159,8 +157,6 @@ public class Assembler {
 		  return name;
 	  }
 	
-	
-	
 	  /**
 	   * ex: 4 --> 001 --> 0010 
 	   * Formating the number of string to 4 bit by adding zero behind
@@ -193,10 +189,8 @@ public class Assembler {
 			System.out.println("The register's number needs to set between 0 to 15 only!");
 		}
 		return null;
-		
 	}
-	
-	
+
 	/**
 	 * ex: 4 --> 001 --> 00100000
 	 * Formating the number of string to 8 bit when encounter the move instruction by adding zero behind
@@ -261,9 +255,7 @@ public class Assembler {
 		return null;
 		
 	}
-	
-	
-	
+
 	/**
 	 * ex: jump 4: 0011 001(0 0000 0000)
 	 * @param str
@@ -376,12 +368,4 @@ public class Assembler {
 		return null;
 		
 	}
-	
-	
-	
-	
-	
-	
-
-
 }

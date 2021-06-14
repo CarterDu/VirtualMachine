@@ -1,16 +1,11 @@
 package du.virtualMachine;
 
-
-
-
 /**
  * Contain the method of multiply and ALU functions
  * @author Carter Du
  *
  */
 public class Multiplier {
-	
-	
 	
 	/**
 	 * 1. Set an longword array to store longwords
@@ -22,19 +17,14 @@ public class Multiplier {
 	 * @throws Exception 
 	 */
 	public static Longword multiply(Longword a, Longword b) throws Exception{
-		
 		Longword lw = new Longword();
 
 		for(int i = 0; i < 32; i++){
 			if(b.bit_container[i].getValue() == 1){
 				lw = RippleAdder.add(a.leftShift(i), lw);
 			}
-			
 		}
-		
-		
 		return lw;
-		
 	}
 	
 	/**
@@ -53,7 +43,6 @@ public class Multiplier {
 		if((operation[0].getValue() == 1) && (operation[1].getValue() == 0) && (operation[2].getValue() == 0) && (operation[3].getValue() == 0))
 		{
 			lw = a.and(b);
-			
 		}
 		//or 1001
 		else if((operation[0].getValue() == 1) && (operation[1].getValue() == 0) && (operation[2].getValue() == 0) && (operation[3].getValue() == 1))
@@ -75,15 +64,12 @@ public class Multiplier {
 		//leftshift 1100
 		else if((operation[0].getValue() == 1) && (operation[1].getValue() == 1) && (operation[2].getValue() == 0) && (operation[3].getValue() == 0))
 		{
-			
 			lw = a.leftShift(b.getSigned());
-			
 		}
 		
 		//rightshift 1101
 		else if((operation[0].getValue() == 1) && (operation[1].getValue() == 1) && (operation[2].getValue() == 0) && (operation[3].getValue() == 1))
 		{
-			
 			lw = a.rightShift(b.getSigned());
 		}
 		
@@ -96,7 +82,7 @@ public class Multiplier {
 		//subtract 1111
 		else if((operation[0].getValue() == 1) && (operation[1].getValue() == 1) && (operation[2].getValue() == 1) && (operation[3].getValue() == 1))
 		{
-			lw = RippleAdder.substract(a, b);
+			lw = RippleAdder.subtract(a, b);
 		}
 		
 		//multiply 0111
@@ -115,7 +101,4 @@ public class Multiplier {
 		}
 		return lw;
 	}
-	
-	
-	
 }

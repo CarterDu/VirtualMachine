@@ -12,5 +12,4 @@ public class MyMain {
 		cpu.runTest4();
 		
 	}
-
 }

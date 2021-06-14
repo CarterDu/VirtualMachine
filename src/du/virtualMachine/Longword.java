@@ -13,20 +13,15 @@ public class Longword implements ILongword{
 	
 	public Longword(){
 		for(int i = 0; i < 32; i++){
-
 			bit_container[i] = new Bit(0);
 		}
 		
 	}
-	
-	
-
 	/**
 	 * Get the bit i
 	 */
 	@Override
 	public Bit getBit(int i) {
-		
 		return bit_container[i];
 	}
 
@@ -35,10 +30,7 @@ public class Longword implements ILongword{
 	 */
 	@Override
 	public void set_Bit(int i, Bit value) {
-
 		bit_container[i].setBit(value.getValue());
-
-		
 	}
 
 	/**
@@ -47,10 +39,9 @@ public class Longword implements ILongword{
 	@Override
 	public Longword and(Longword other) {
 		Longword lw = new Longword();
-			for(int i = 0; i < 32; i++){
-				lw.bit_container[i] = bit_container[i].and(other.bit_container[i]);;
-			}
-		
+		for(int i = 0; i < 32; i++){
+			lw.bit_container[i] = bit_container[i].and(other.bit_container[i]);
+		}
 		return lw;
 	}
 
@@ -99,12 +90,10 @@ public class Longword implements ILongword{
 		if(amount < 0){
 			throw new Exception("Amount number can not be negative to shift!");
 		}
-		
 		Longword lw = new Longword();
 		for(int i = amount, j = 0; i < 32; i++, j++){
 			lw.set_Bit(j, bit_container[i]);
 		}
-		
 		return lw;
 	}
 
@@ -115,8 +104,6 @@ public class Longword implements ILongword{
 	 */
 	@Override
 	public Longword leftShift(int amount) throws Exception {
-		
-		
 		if(amount < 0){
 			throw new Exception("Amount number can not be negative to shift!");
 		}
@@ -124,9 +111,6 @@ public class Longword implements ILongword{
 		for(int i = 0, j = amount; i < 32-amount; j++,i++){
 			lw.set_Bit(j, bit_container[i]);
 		}
-		
-		
-		
 		return lw;
 	}
 
@@ -138,15 +122,12 @@ public class Longword implements ILongword{
 		long val = 1;
 		long sum = 0;
 		for(int i = 0; i < 32; i++){
-			
 			if(this.bit_container[i].getValue() == 1){
 				sum = sum + val;
 			}
 			val = val * 2;
 		}
 		return sum;
-		
-		
 	}
 
 	/**
@@ -186,8 +167,6 @@ public class Longword implements ILongword{
 			}
 		}
 		return result;
-
-		
 	}
 
 	/**
@@ -228,7 +207,6 @@ public class Longword implements ILongword{
 				power = (int) Math.pow(2, i);
 				if(result < power){
 					set_Bit(i, new Bit(1));
-					
 				}
 			
 				else if(result >= power){
@@ -239,16 +217,9 @@ public class Longword implements ILongword{
 			Longword lw = new Longword();
 			lw.set(1);
 			this.copy(RippleAdder.add(this, lw));
-			
 		}
-	
-		
-		
-	
-		
 	}
-	
-	
+
 	/**
 	 * returns a comma separated string of 0's and 1's: "0,0,0,0,0 (etcetera)" for example
 	 */
@@ -259,9 +230,4 @@ public class Longword implements ILongword{
 		return str;
 		
 	}
-	
-	
-	
-	
-		
 }

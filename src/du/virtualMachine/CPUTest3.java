@@ -18,11 +18,6 @@ public class CPUTest3 {
 		c9.run();			//now the value of register 3 is 9
 		
 		System.out.println();
-	
-		
-		
-		
-		
 
 	}
 

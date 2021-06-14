@@ -12,8 +12,6 @@ public interface IBit {
     Bit xor(Bit other); // performs xor on two bits and returns a new bit set to the result
     Bit not(); // performs not on the existing bit, returning the result as a new bit
     @Override
-    String toString(); // returns ��0�� or ��1��
-	
-	
+    String toString();
 
 }

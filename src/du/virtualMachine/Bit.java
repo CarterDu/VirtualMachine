@@ -2,17 +2,13 @@ package du.virtualMachine;
 
 public class Bit implements IBit{
 	
-	public int bit;	//declare the local variable
-	
-	
-	
+	private int bit;
+
 	public Bit(int bit) throws NumberFormatException{
 		this.bit = bit;
 		if(bit!=0 && bit!=1){
 			throw new NumberFormatException("Numbers have to be 1 or 0");
 		}
-		
-
 	}
 	
 	
@@ -21,12 +17,8 @@ public class Bit implements IBit{
 		bit = value;
 		
 		if(bit!=0 && bit!=1){
-			throw new NumberFormatException("Numbers have to be setted as 1 or 0");
-			
+			throw new NumberFormatException("Bit's value has to be 1 or 0!");
 		}
-		
-		
-		
 	}
 
 	/**
@@ -40,7 +32,6 @@ public class Bit implements IBit{
 		else if(this.getValue() == 1){
 			this.setBit(0);
 		}
-		
 	}
 
 	/**
@@ -48,7 +39,6 @@ public class Bit implements IBit{
 	 */
 	@Override
 	public void set() {
-		
 		this.setBit(1);
 	}
 
@@ -87,7 +77,7 @@ public class Bit implements IBit{
 		if(this.getValue()==1 && other.getValue()==0){
 			return new Bit(0);
 		}
-		throw new NumberFormatException("Numbers have to be 1 or 0 in the AND operation!");
+		throw new NumberFormatException("Bit's value has to be 1 or 0 in the AND operation!");
 	}
 
 	/**
@@ -95,16 +85,11 @@ public class Bit implements IBit{
 	 */
 	@Override
 	public Bit or(Bit other) throws NumberFormatException{
-		
-		
 		if(this.getValue()==1 && other.getValue()==0){
-			
 			return new Bit(1);
-			
 		}
 		else if(this.getValue()==0 && other.getValue()==1){
 			return new Bit(1);
-			
 		}
 		else if(this.getValue()==1 && other.getValue()==1){
 			return new Bit(1);
@@ -112,10 +97,8 @@ public class Bit implements IBit{
 		else if(this.getValue()==0 && other.getValue()==0){
 			return new Bit(0);
 		}
-		
-			throw new NumberFormatException("Numbers have to be 1 or 0 in the OR operation!");
-		
-		 
+		else
+			throw new NumberFormatException("Bit's value has to be 1 or 0 in the OR operation!");
 	}
 
 	
@@ -127,19 +110,16 @@ public class Bit implements IBit{
 		
 		if(this.getValue()==0 && other.getValue()==0){
 			return new Bit(0);
+		} else if(this.getValue() == 1 && other.getValue() == 1) {
+			return new Bit(0);
+		} else if(this.getValue() == 1 && other.getValue() == 0) {
+			return new Bit(1);
+
+		} else if(this.getValue() == 0 && other.getValue() == 1) {
+			return new Bit(1);
 		}
-		else if(this.getValue()==1 && other.getValue()==1){
-			 return new Bit(0);
-		}
-		 else if(this.getValue()==1 && other.getValue()==0){
-			 return new Bit(1);
-			
-		}
-		 else if(this.getValue()==0 && other.getValue()==1){
-			 return new Bit(1);
-			
-		}
-		throw new NumberFormatException("Numbers have to be 1 or 0 in the XOR operation!"); 
+		else
+			throw new NumberFormatException("Bit's value has to be 1 or 0 in the XOR operation!");
 	}
 
 	
@@ -154,7 +134,8 @@ public class Bit implements IBit{
 		else if(this.getValue() == 0){
 			return new Bit(1);
 		}
-		throw new NumberFormatException("Numbers have to be 1 or 0 in the NOT operation!");
+		else
+			throw new NumberFormatException("Bit value has to be 1 or 0 in the NOT operation!");
 	}
 	
 	/**
@@ -167,11 +148,7 @@ public class Bit implements IBit{
 		}
 		if(this.bit == 0){
 			return "0";
-			
 		}
-		
 		return null;
-		
 	}
-	
 }
